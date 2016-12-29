@@ -101,66 +101,67 @@ public class MainActivity extends AppCompatActivity {
                 editor.putInt("money", money);
                 editor.commit();
                 m.setText("활동지수 : " + money);
-            }
-        });
 
-        if(stress >= 100){
-            editor.clear();
-            editor.commit();
-            Intent intent = new Intent(MainActivity.this, Death.class);
-            startActivity(intent);
-            finish();
-        }
-        else if(popularity >= 100 && popularity % 100 == 0){
-            AlertDialog.Builder ending = new AlertDialog.Builder(MainActivity.this);
-            ending.setMessage("인지도 킹이 되었습니다. 당신의 계정을 사려는 사람들이 많습니다.\n계정을 판매하시겠습니까?");
-            ending.setCancelable(false).setNegativeButton("더 할래요!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).setPositiveButton("좋아요!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                if(stress >= 100 || popularity < 0){
                     editor.clear();
                     editor.commit();
-                    Intent intent = new Intent(MainActivity.this, Ending.class);
+                    Intent intent = new Intent(MainActivity.this, Death.class);
                     startActivity(intent);
                     finish();
                 }
-            });
-           ending.show();
-        }
-        else if(popularity >= 100 && popularity % 10 == 0){
-            final AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
-            ad.setMessage("인지도가 높습니다. 광고 계약 문의가 끊이지 않네요.\n광고 계약을 하시겠습니까? 인지도가 떨어집니다.");
-            ad.setCancelable(false).setNegativeButton("아니요,,", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).setPositiveButton("네!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    money += 200000;
-                    popularity -= 5;
-                    editor.putInt("money", money);
-                    editor.putInt("popularity", popularity);
-                    editor.commit();
-                    AlertDialog.Builder check = new AlertDialog.Builder(MainActivity.this);
-                    check.setMessage("활동지수 +200000, 인지도 -5");
-                    ad.setCancelable(false).setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                else if(popularity >= 100 && popularity % 100 == 0){
+                    AlertDialog.Builder ending = new AlertDialog.Builder(MainActivity.this);
+                    ending.setMessage("인지도 킹이 되었습니다. 당신의 계정을 사려는 사람들이 많습니다.\n계정을 판매하시겠습니까?");
+                    ending.setCancelable(false).setNegativeButton("더 할래요!", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
+                    }).setPositiveButton("좋아요!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            editor.clear();
+                            editor.commit();
+                            Intent intent = new Intent(MainActivity.this, Ending.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     });
-                    check.show();
-                    m.setText("활동지수 : " + money);
+                    ending.show();
                 }
-            });
-            ad.show();
-        }
+                else if(popularity >= 10 && popularity % 10 == 0){
+                    final AlertDialog.Builder ad = new AlertDialog.Builder(MainActivity.this);
+                    ad.setMessage("인지도가 높습니다. 광고 계약 문의가 끊이지 않네요.\n광고 계약을 하시겠습니까? 인지도가 떨어집니다.");
+                    ad.setCancelable(false).setNegativeButton("아니요,,", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton("네!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            money += 200000;
+                            popularity -= 5;
+                            editor.putInt("money", money);
+                            editor.putInt("popularity", popularity);
+                            editor.commit();
+                            AlertDialog.Builder check = new AlertDialog.Builder(MainActivity.this);
+                            check.setMessage("활동지수 +200000, 인지도 -5");
+                            ad.setCancelable(false).setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            check.show();
+                            m.setText("활동지수 : " + money);
+                            p.setText("인지도 : " + popularity);
+                        }
+                    });
+                    ad.show();
+                }
+            }
+        });
 
         changeprofile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             stress += 10;
-                            popularity += 2;
+                            popularity += 1;
                             money -= 10000;
                             editor.putInt("stress", stress);
                             editor.putInt("popularity", popularity);
@@ -192,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
                             p.setText("인지도 : " + popularity);
                             m.setText("활동지수 : " + money);
 
-                            Random random = new Random();
-                            int rand = random.nextInt(6) + 1;
-                            switch (rand){
+                            int random = (int)(Math.random() * 6 + 1);
+
+                            switch (random){
                                 case 1 : image.setImageDrawable(one);
                                 case 2 : image.setImageDrawable(two);
                                 case 3 : image.setImageDrawable(three);
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                                 case 5 : image.setImageDrawable(five);
                                 case 6 : image.setImageDrawable(six);
                             }
-                            editor.putInt("psa", rand);
+                            editor.putInt("psa", random);
                             editor.commit();
 
                             AlertDialog.Builder check = new AlertDialog.Builder(MainActivity.this);
@@ -266,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                             check.setMessage("스트레스 -10\n" +
-                                    "인지도 +1");
+                                    "인지도 +2");
                             check.show();
                         }
                     }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
